@@ -17,12 +17,13 @@
 			);
 		}
 
+		// TODO Split on '/' and remove the last folder
 		var project_url = window.location.href.split('.ide')[0];
 		var validator_url = "http://validator.nu/";
 		if (getURLParameter('validator_url') != 'null') {
+			// TODO Maybe this could be stored in a cookie for convenience?
 			validator_url = getURLParameter('validator_url');
 		}
-		// TODO File to edit must be customizable... pass in url?
 
 		var run_delay = 1500;
 		
