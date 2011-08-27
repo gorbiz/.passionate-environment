@@ -1,6 +1,6 @@
 <html>
 <head>
-	<title>Test IDE</title>
+	<title>Passionate environment</title>
 
 	<script src="http://www.passionismandatory.com/libs/ace/ace-uncompressed.js" type="text/javascript" charset="utf-8"></script>
 	<script src="http://www.passionismandatory.com/libs/ace/mode-html.js" type="text/javascript" charset="utf-8"></script>
@@ -10,15 +10,9 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js" type="text/javascript"></script> 
 	
 	<script type="text/javascript">
+		
+		var project_url = get_project_url();
 
-		function getURLParameter(name) {
-			return decodeURI(
-				(RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
-			);
-		}
-
-		// TODO Split on '/' and remove the last folder
-		var project_url = window.location.href.split('.ide')[0];
 		var validator_url = "http://validator.nu/";
 		if (getURLParameter('validator_url') != 'null') {
 			// TODO Maybe this could be stored in a cookie for convenience?
@@ -26,6 +20,19 @@
 		}
 
 		var run_delay = 1500;
+		
+		function get_project_url() {
+			var clear_url = window.location.href.split('?')[0].slice(0, -1);
+			return clear_url.substr(0, clear_url.lastIndexOf('/') + 1);			
+		}
+
+		function getURLParameter(name) {
+			return decodeURI(
+				(RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+			);
+		}
+
+
 		
 		var editor;
 		window.onload = function() {
