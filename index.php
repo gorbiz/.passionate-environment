@@ -285,7 +285,7 @@
 				console.log('Update results:');
 				console.log(data);
 				console.log('Document should now be reloaded...');
-				("#updates-results").html(data);
+				$("#updates-results").html(data);
 				$("#updates_refresh").show();
 			});
 		}
