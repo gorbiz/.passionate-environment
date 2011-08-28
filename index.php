@@ -256,6 +256,7 @@
 		// This is some crazy attempt to allow users to update the editor from
 		// inside the editor using (git pull) if there are updates...
 		function check_for_updates() {
+			$("#updates_refresh").hide();
 			$.getJSON('check_for_updates.php', function(updates) {
 				if (updates.length > 0) {
 					if (updates[0].warning != undefined) {
@@ -284,7 +285,8 @@
 				console.log('Update results:');
 				console.log(data);
 				console.log('Document should now be reloaded...');
-				//window.location.reload();
+				("#updates-results").html(data);
+				$("#updates_refresh").show();
 			});
 		}
 
@@ -491,6 +493,8 @@
 	<ul id="updates-list"></ul>
 	<a href="javascript:update_now();" id="update_now" class="awesome large green button">Update!</a>
 	<a href="javascript:hide_update_screen();" id="update_hide" class="awesome large blue button">Not now</a>
+	<pre id="updates-results"></pre>
+	<a href="javascript:window.location.reload();" id="updates_refresh" class="awesome large green button">Reload page to see changes</a>
 </div>
 
 <pre id="output"></pre>
