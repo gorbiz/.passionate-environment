@@ -1,4 +1,14 @@
 <?php
-//file_put_contents('errors.log', '');
-file_put_contents('/tmp/index_' . time() . '.php', $_POST['data']);
-file_put_contents('../index.php', $_POST['data']);
+if (!isset($_REQUEST['file']) || empty($_REQUEST['file'])) {
+	echo "Error no file provided.";
+	die;
+}
+
+if (! file_exists('../' . $_REQUEST['file'])) {
+	echo "Error the file provided does not exist.";
+	die;
+}
+
+$file = $_REQUEST['file'];
+file_put_contents("/tmp/$file" . time(), $_POST['data']);
+file_put_contents("../$file", $_POST['data']);
