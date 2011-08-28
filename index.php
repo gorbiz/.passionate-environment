@@ -15,7 +15,7 @@
 		if (getURLParameter('file') != 'null') {
 			file_to_edit = getURLParameter('file');
 		} else {
-			$.get('find_file.php', function(data) {
+			$.get('find_file.php', {nocache: new Date().getTime()}, function(data) {
 				file_to_edit = data;
 				setup_editor_for(file_to_edit);
 			});
@@ -118,7 +118,7 @@
 		
 		function setup_editor_for(file) {
 			refresh_page();
-			$.get('get.php', {file: file}, function(data) {
+			$.get('get.php', {file: file, nocache: new Date().getTime()}, function(data) {
 				editor.getSession().setValue(data);
 				// XXX I put this in here so that the editor will not save the file just after loading it...
 				editor.getSession().on('change', function() {
@@ -192,7 +192,7 @@
 			console.log('validate_html5()');
 			$.ajax({
 				url: validator_url,
-				data: { doc: url, out: 'json' },
+				data: { doc: url, out: 'json', nocache: new Date().getTime() },
 				success: function(result) {
 					// FIXME Do propper error handling here!
 					if (result.messages[0].type == 'non-document-error') {
