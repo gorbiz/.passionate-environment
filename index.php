@@ -71,6 +71,10 @@
 			if (show_only_page_on_load) {
 				show_only_page();
 			}
+			
+			check_for_updates();
+			
+			
 						
 			$("#errors").mouseover(function() {
 				show_errors();
@@ -251,7 +255,7 @@
 
 		// This is some crazy attempt to allow users to update the editor from
 		// inside the editor using (git pull) if there are updates...
-		function check_for_updated() {
+		function check_for_updates() {
 			$.getJSON('check_for_updates.php', function(updates) {
 				if (updates.length > 0) {
 					if (updates[0].warning != undefined) {
