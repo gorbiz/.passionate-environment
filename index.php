@@ -1,6 +1,6 @@
 <html>
 <head>
-	<title>Testing... Passionate environment</title>
+	<title>Passionate environment</title>
 
 	<script src="http://www.passionismandatory.com/libs/ace/ace-uncompressed.js" type="text/javascript" charset="utf-8"></script>
 	<script src="http://www.passionismandatory.com/libs/ace/mode-html.js" type="text/javascript" charset="utf-8"></script>
