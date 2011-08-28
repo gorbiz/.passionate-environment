@@ -11,6 +11,18 @@
 	
 	<script type="text/javascript">
 		
+		var file_to_edit;
+		if (getURLParameter('file') != 'null') {
+			file_to_edit = getURLParameter('file');
+		} else {
+			$.get('find_file.php', function(data) {
+				file_to_edit = data;
+				setup_editor_for(file_to_edit);
+			});
+		}
+		
+		var run_delay = 1500;
+		
 		var project_url = get_project_url();
 
 		var validator_url = "http://validator.nu/";
@@ -18,8 +30,11 @@
 			// TODO Maybe this could be stored in a cookie for convenience?
 			validator_url = getURLParameter('validator_url');
 		}
-
-		var run_delay = 1500;
+		/*
+		 * TODO else if on localhost/local network check if localhost:8888
+		 * appears to be a validator, if so; use it.
+		 * if not, show a friendly warning.
+		 */ 
 		
 		function get_project_url() {
 			var clear_url = window.location.href.split('?')[0].slice(0, -1);
@@ -47,16 +62,10 @@
 			var mode = require("ace/mode/html").Mode;
 			editor.getSession().setMode(new mode());
 			
-			$.get('get.php', function(data) {
-				editor.getSession().setValue(data);
-			});
-			
-			editor.getSession().on('change', function() {
-				code_changed();
-				run_unintrusive();
-			});
-			editor.getSession().selection.on('changeCursor', abort_run);
-			
+			if (file_to_edit) {
+				setup_editor_for(file_to_edit);
+			}
+						
 			$("#errors").mouseover(function() {
 				show_errors();
 			});
@@ -73,7 +82,6 @@
 			
 			$("iframe#iframe").load(function() {
 				update_errors();
-				// update_output();
 			});
 			
 			// FIXME When going right, toggling browser fullscreen and then going left the editor is all white (resizing the window brings it's content back...)
@@ -96,6 +104,19 @@
 
 		};
 		
+		function setup_editor_for(file) {
+			refresh_page();
+			$.get('get.php', {file: file}, function(data) {
+				editor.getSession().setValue(data);
+				// XXX I put this in here so that the editor will not save the file just after loading it...
+				editor.getSession().on('change', function() {
+					code_changed();
+					run_unintrusive();
+				});
+				editor.getSession().selection.on('changeCursor', abort_run);
+			});
+		}
+		
 		var code_has_changed = false;
 		function code_changed() {
 			code_has_changed = true;
@@ -112,15 +133,18 @@
 			code_has_changed = false;
 			console.log('run()');
 			var data = editor.getSession().getValue();
-			$.post("put.php", { data: data }, function(data) {
+			$.post("put.php", { file: file_to_edit, data: data }, function(data) {
 				if (data.length) {
 					alert("Got an unexpected response: " + data);
 					return false;
 				} else {
-					$("#iframe").attr('src', '../index.php');
+					refresh_page();
 				}
 			});
-			
+		}
+		
+		function refresh_page() {
+			$("#iframe").attr('src', '../' + file_to_edit);
 		}
 
 		function abort_run() {
@@ -142,7 +166,7 @@
 		}
 		
 		function update_errors() {
-			validate_html5(project_url, function(data) {
+			validate_html5(project_url + '/' + file_to_edit, function(data) {
 				$("#errors-html").html(format_errors(data));
 				if (data.length) {
 					show_errors();
@@ -154,7 +178,6 @@
 
 		function validate_html5(url, callback) {
 			console.log('validate_html5()');
-			console.log(validator_url);
 			$.ajax({
 				url: validator_url,
 				data: { doc: url, out: 'json' },
