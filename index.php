@@ -21,6 +21,8 @@
 			});
 		}
 		
+		var show_only_page_on_load = (getURLParameter('fullscreen') != 'null');
+		
 		var run_delay = 1500;
 		
 		var project_url = get_project_url();
@@ -65,6 +67,10 @@
 			if (file_to_edit) {
 				setup_editor_for(file_to_edit);
 			}
+			
+			if (show_only_page_on_load) {
+				show_only_page();
+			}
 						
 			$("#errors").mouseover(function() {
 				show_errors();
@@ -87,22 +93,28 @@
 			// FIXME When going right, toggling browser fullscreen and then going left the editor is all white (resizing the window brings it's content back...)
 			$("#toggle-right").mouseover(function() {
 				console.log('RIGHT');
-				
-				$("#editor").css("width", 0);
-				$("#iframe").css("left", 1);
-				$("#iframe").css("width", 1279);
+				show_only_page();
 			});
 
 			$("#toggle-left").mouseover(function() {
 				console.log('LEFT');
-
-				$("#editor").css("width", 631);
-				$("#iframe").css("left", 632);
-				$("#iframe").css("width", 647);
-				editor.resize();
+				show_normal_view();
 			});
 
 		};
+		
+		function show_only_page() {
+			$("#editor").css("width", 0);
+			$("#iframe").css("left", 1);
+			$("#iframe").css("width", 1279);			
+		}
+		
+		function show_normal_view() {
+			$("#editor").css("width", 631);
+			$("#iframe").css("left", 632);
+			$("#iframe").css("width", 647);
+			editor.resize();
+		}
 		
 		function setup_editor_for(file) {
 			refresh_page();
