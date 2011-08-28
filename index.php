@@ -166,7 +166,10 @@
 					}
 					callback(
 						result.messages
-						.filter(function(message) { return message.type != 'info' })
+						.filter(function(message) { return message.type != 'info'; })
+						// Ignore these messages about meta tags as the validator fails fo validate them correctly
+						.filter(function(message) { return !/Attribute .?property.? not allowed on element .?meta.?/.test(message.message); })
+						.filter(function(message) { return !/Element .?meta.? is missing one or more of the following attributes/.test(message.message); })
 						.map(function(message) {
 								return "<strong>" + message.type.charAt(0).toUpperCase() + message.type.substr(1) + ":</strong>" + message.message + "<br />" 
 									+ "From line " + message.firstLine + ", column" + message.firstColumn + "; to line " + message.lastLine + ", column " + message.lastColumn + "<br />"
