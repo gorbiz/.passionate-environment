@@ -55,7 +55,7 @@ function pretty_commit($commit) {
 }
 
 function is_working_copy_clean() {
-	$handle = popen('git log --name-only ..origin/master 2>&1', 'r');
+	$handle = popen('git status -s 2>&1', 'r');
 	$result = $read = fread($handle, 2096);
 	pclose($handle);
 	
