@@ -12,6 +12,25 @@
 	
 	<script type="text/javascript">
 		
+		/**
+		 * Some options,
+		 * all are to be passed via the URL.
+		 * 
+		 * Edit a specific file:
+		 * &file=<filename>
+		 * 
+		 * Hide the editor on load (fullscreen mode):
+		 * &fullscreen=yes
+		 * Exit fullscreen mode by mousing over left edge of the screen.
+		 *
+		 * Turn off the html valiator:
+		 * &validator_url=none
+		 *
+		 * Specify a html validator to use (compatible with validator.nu):
+		 * &validator_url=<url to validator>
+		 * Example: &validator_url=http://localhost:8888
+		 */
+		
 		var file_to_edit;
 		if (getURLParameter('file') != 'null') {
 			file_to_edit = getURLParameter('file');
@@ -192,6 +211,7 @@
 		}
 		
 		function update_errors() {
+			if (validator_url == 'none') return;
 			validate_html5(project_url + '/' + file_to_edit, function(data) {
 				$("#errors-html").html(format_errors(data));
 				if (data.length) {
