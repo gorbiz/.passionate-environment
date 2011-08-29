@@ -4,6 +4,7 @@
 
 	<script src="http://www.passionismandatory.com/libs/ace/ace-uncompressed.js" type="text/javascript" charset="utf-8"></script>
 	<script src="http://www.passionismandatory.com/libs/ace/mode-html.js" type="text/javascript" charset="utf-8"></script>
+	<script src="http://www.passionismandatory.com/libs/ace/mode-php.js" type="text/javascript" charset="utf-8"></script>
 	<script src="http://www.passionismandatory.com/libs/ace/theme-twilight.js" type="text/javascript" charset="utf-8"></script>
 	
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js" type="text/javascript"></script> 
@@ -60,9 +61,6 @@
 			
 			// Without this, hitting the home button doesn't scroll all the way 
 			editor.renderer.setPadding(0);
-			
-			var mode = require("ace/mode/html").Mode;
-			editor.getSession().setMode(new mode());
 			
 			if (file_to_edit) {
 				setup_editor_for(file_to_edit);
@@ -121,6 +119,14 @@
 		}
 		
 		function setup_editor_for(file) {
+			if ('php' == get_file_extenstion(file).toLowerCase()) {
+				var mode = require("ace/mode/php").Mode;
+				editor.getSession().setMode(new mode());
+			} else {
+				var mode = require("ace/mode/html").Mode;
+				editor.getSession().setMode(new mode());
+			}
+			
 			refresh_page();
 			$.get('get.php', {file: file, nocache: new Date().getTime()}, function(data) {
 				editor.getSession().setValue(data);
@@ -131,6 +137,10 @@
 				});
 				editor.getSession().selection.on('changeCursor', abort_run);
 			});
+		}
+		
+		function get_file_extenstion(filename) {
+			return (/[.]/.exec(filename)) ? /[^.]+$/.exec(filename)[0] : undefined;
 		}
 		
 		var code_has_changed = false;
