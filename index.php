@@ -43,7 +43,7 @@
 		
 		var show_only_page_on_load = (getURLParameter('fullscreen') != 'null');
 		
-		var run_delay = 1500;
+		var run_delay = 1000;
 		
 		var project_url = get_project_url();
 
@@ -127,13 +127,13 @@
 		function show_only_page() {
 			$("#editor").css("width", 0);
 			$("#iframe").css("left", 1);
-			$("#iframe").css("width", 1279);			
+			$("#iframe").css("width", 1679);			
 		}
 		
 		function show_normal_view() {
 			$("#editor").css("width", 631);
 			$("#iframe").css("left", 632);
-			$("#iframe").css("width", 647);
+			$("#iframe").css("width", 1047);
 			editor.resize();
 		}
 		
@@ -189,7 +189,10 @@
 		}
 		
 		function refresh_page() {
-			$("#iframe").attr('src', '../' + file_to_edit);
+			$("#iframe").attr('src', '../' + file_to_edit + '?random=' + (new Date().getTime()));
+			//$("#iframe").contentWindow.location.reload();
+			//document.getElementById("iframe").contentDocument.location.href = 'src', '../' + file_to_edit;
+			//document.getElementById("iframe").contentDocument.location.reload(true);
 		}
 
 		function abort_run() {
@@ -341,7 +344,7 @@
 			position: absolute;
 			left: 632px;
 			top: 0;
-			width: 647px;
+			width: 1047px;
 			height: 100%;
 			
 			border: 0;
