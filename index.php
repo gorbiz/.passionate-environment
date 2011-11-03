@@ -233,7 +233,7 @@
 				success: function(result) {
 					// FIXME Do propper error handling here!
 					if (result.messages[0].type == 'non-document-error') {
-						alert('Failed to validate, maybe you are on using an external validator from localhost?');
+						alert('Failed to validate, maybe you are using an external validator from localhost?');
 						return;
 					}
 					callback(
