@@ -30,7 +30,29 @@
 		 * &validator_url=<url to validator>
 		 * Example: &validator_url=http://localhost:8888
 		 */
-		
+
+		function getUrlVars() {
+			var vars = {};
+			var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+				vars[key] = value;
+			});
+			return vars;
+		}
+		function getUnknownUrlVarsAsString() {
+			var unknown = {};
+			var vars = getUrlVars();
+			for (key in vars) {
+				if (key != 'validator_url' && key != 'file' && key != 'fullscreen') {
+					unknown[key] = vars[key];
+				}
+			}
+			var tmp = [];
+			for (key in unknown) {
+				tmp.push(key + '=' + unknown[key]);
+			}
+			return tmp.join('&');
+		}
+
 		var file_to_edit;
 		if (getURLParameter('file') != 'null') {
 			file_to_edit = getURLParameter('file');
@@ -189,7 +211,11 @@
 		}
 		
 		function refresh_page() {
-			$("#iframe").attr('src', '../' + file_to_edit + '?random=' + (new Date().getTime()));
+			var passedParams = '';
+			if (getUnknownUrlVarsAsString()) {
+				passedParams = '&' + getUnknownUrlVarsAsString();
+			}
+			$("#iframe").attr('src', '../' + file_to_edit + '?random=' + (new Date().getTime()) + passedParams);
 			//$("#iframe").contentWindow.location.reload();
 			//document.getElementById("iframe").contentDocument.location.href = 'src', '../' + file_to_edit;
 			//document.getElementById("iframe").contentDocument.location.reload(true);
