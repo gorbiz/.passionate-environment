@@ -1,13 +1,39 @@
 <html>
 <head>
-	<title>Test3. Passionate environment</title>
+	<title>.passionate-environment</title>
+
+<?php
+
+$available_themes = array(
+	"clouds",
+	"clouds_midnight",
+	"cobalt",
+	"crimson_editor",
+	"dawn",
+	"eclipse",
+	"idle_fingers",
+	"kr_theme",
+	"merbivore",
+	"merbivore_soft",
+	"mono_industrial",
+	"monokai",
+	"pastel_on_dark",
+	"twilight",
+	"vibrant_ink");
+
+$theme = "twilight";
+if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
+	$theme = $_GET['theme'];
+}
+
+?>
 
 	<script src="http://www.passionismandatory.com/libs/ace/ace-uncompressed.js" type="text/javascript" charset="utf-8"></script>
 	<script src="http://www.passionismandatory.com/libs/ace/mode-html.js" type="text/javascript" charset="utf-8"></script>
 	<script src="http://www.passionismandatory.com/libs/ace/mode-php.js" type="text/javascript" charset="utf-8"></script>
 	<script src="http://www.passionismandatory.com/libs/ace/mode-css.js" type="text/javascript" charset="utf-8"></script>
 	<script src="http://www.passionismandatory.com/libs/ace/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
-	<script src="http://www.passionismandatory.com/libs/ace/theme-twilight.js" type="text/javascript" charset="utf-8"></script>
+	<script src="http://www.passionismandatory.com/libs/ace/theme-<?php echo $theme; ?>.js" type="text/javascript" charset="utf-8"></script>
 	
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js" type="text/javascript"></script> 
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js" type="text/javascript"></script> 
@@ -98,7 +124,7 @@
 		var editor;
 		window.onload = function() {
 			editor = ace.edit("editor");
-			editor.setTheme("ace/theme/twilight");
+			editor.setTheme("ace/theme/<?php echo $theme; ?>");
 			
 			editor.setShowPrintMargin(false);
 			
