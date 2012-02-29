@@ -5,6 +5,8 @@
 	<script src="http://www.passionismandatory.com/libs/ace/ace-uncompressed.js" type="text/javascript" charset="utf-8"></script>
 	<script src="http://www.passionismandatory.com/libs/ace/mode-html.js" type="text/javascript" charset="utf-8"></script>
 	<script src="http://www.passionismandatory.com/libs/ace/mode-php.js" type="text/javascript" charset="utf-8"></script>
+	<script src="http://www.passionismandatory.com/libs/ace/mode-css.js" type="text/javascript" charset="utf-8"></script>
+	<script src="http://www.passionismandatory.com/libs/ace/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
 	<script src="http://www.passionismandatory.com/libs/ace/theme-twilight.js" type="text/javascript" charset="utf-8"></script>
 	
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js" type="text/javascript"></script> 
@@ -162,12 +164,15 @@
 		function setup_editor_for(file) {
 			if ('php' == get_file_extenstion(file).toLowerCase()) {
 				var mode = require("ace/mode/php").Mode;
-				editor.getSession().setMode(new mode());
+			} else if ('css' == get_file_extenstion(file).toLowerCase()) {
+				var mode = require("ace/mode/css").Mode;
+			} else if ('js' == get_file_extenstion(file).toLowerCase()) {
+				var mode = require("ace/mode/javascript").Mode;
 			} else {
 				var mode = require("ace/mode/html").Mode;
-				editor.getSession().setMode(new mode());
 			}
-			
+			editor.getSession().setMode(new mode());
+
 			refresh_page();
 			$.get('get.php', {file: file, nocache: new Date().getTime()}, function(data) {
 				editor.getSession().setValue(data);
