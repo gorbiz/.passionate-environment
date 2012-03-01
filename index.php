@@ -90,11 +90,22 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 				setup_editor_for(file_to_edit);
 			});
 		}
-		
+
+		/*
+		 * Instead of simply rendering the file you are editing in the
+		 * right hand side iframe you can render any URL you want.
+		 * Useful when editing CSS, JavaScript or when deling with
+		 * front controlled systems like Drupal or WordPress.
+		 */
+		var render_url = null;
+		if (getURLParameter('render_url') != 'null') {
+			render_url = decodeURIComponent(getURLParameter('render_url'));
+		}
+
 		var show_only_page_on_load = (getURLParameter('fullscreen') != 'null');
-		
+
 		var run_delay = 1000;
-		
+
 		var project_url = get_project_url();
 
 		var validator_url = "http://validator.nu/";
@@ -106,8 +117,8 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 		 * TODO else if on localhost/local network check if localhost:8888
 		 * appears to be a validator, if so; use it.
 		 * if not, show a friendly warning.
-		 */ 
-		
+		 */
+
 		function get_project_url() {
 			var clear_url = window.location.href.split('?')[0].slice(0, -1);
 			return clear_url.substr(0, clear_url.lastIndexOf('/') + 1);			
@@ -246,7 +257,12 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 			if (getUnknownUrlVarsAsString()) {
 				passedParams = '&' + getUnknownUrlVarsAsString();
 			}
-			$("#iframe").attr('src', '../' + file_to_edit + '?random=' + (new Date().getTime()) + passedParams);
+			if (render_url) {
+				// FIXME Serious issue we don't know if the URL has a query part or not, we simply assume so... This is something that will fail 50% of the time or so...
+				$("#iframe").attr('src', render_url + '&random=' + (new Date().getTime()) + passedParams);
+			} else {
+				$("#iframe").attr('src', '../' + file_to_edit + '?random=' + (new Date().getTime()) + passedParams);
+			}
 			//$("#iframe").contentWindow.location.reload();
 			//document.getElementById("iframe").contentDocument.location.href = 'src', '../' + file_to_edit;
 			//document.getElementById("iframe").contentDocument.location.reload(true);
