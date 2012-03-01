@@ -34,19 +34,19 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 	<script src="http://www.passionismandatory.com/libs/ace/mode-css.js" type="text/javascript" charset="utf-8"></script>
 	<script src="http://www.passionismandatory.com/libs/ace/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
 	<script src="http://www.passionismandatory.com/libs/ace/theme-<?php echo $theme; ?>.js" type="text/javascript" charset="utf-8"></script>
-	
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js" type="text/javascript"></script> 
-	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js" type="text/javascript"></script> 
-	
+
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js" type="text/javascript"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js" type="text/javascript"></script>
+
 	<script type="text/javascript">
-		
+
 		/**
 		 * Some options,
 		 * all are to be passed via the URL.
-		 * 
+		 *
 		 * Edit a specific file:
 		 * &file=<filename>
-		 * 
+		 *
 		 * Hide the editor on load (fullscreen mode):
 		 * &fullscreen=yes
 		 * Exit fullscreen mode by mousing over left edge of the screen.
@@ -121,7 +121,7 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 
 		function get_project_url() {
 			var clear_url = window.location.href.split('?')[0].slice(0, -1);
-			return clear_url.substr(0, clear_url.lastIndexOf('/') + 1);			
+			return clear_url.substr(0, clear_url.lastIndexOf('/') + 1);
 		}
 
 		function getURLParameter(name) {
@@ -131,47 +131,47 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 		}
 
 
-		
+
 		var editor;
 		window.onload = function() {
 			editor = ace.edit("editor");
 			editor.setTheme("ace/theme/<?php echo $theme; ?>");
-			
+
 			editor.setShowPrintMargin(false);
-			
+
 			// Without this, hitting the home button doesn't scroll all the way 
 			editor.renderer.setPadding(0);
-			
+
 			if (file_to_edit) {
 				setup_editor_for(file_to_edit);
 			}
-			
+
 			if (show_only_page_on_load) {
 				show_only_page();
 			}
-			
+
 			check_for_updates();
-			
-			
-						
+
+
+
 			$("#errors").mouseover(function() {
 				show_errors();
 			});
 			$("#errors").mouseout(function() {
 				hide_errors();
-			});			
-			
+			});
+
 			$("#output").mouseover(function() {
 				show_output();
 			});
 			$("#output").mouseout(function() {
 				hide_output();
 			});
-			
+
 			$("iframe#iframe").load(function() {
 				update_errors();
 			});
-			
+
 			// FIXME When going right, toggling browser fullscreen and then going left the editor is all white (resizing the window brings it's content back...)
 			$("#toggle-right").mouseover(function() {
 				console.log('RIGHT');
@@ -184,20 +184,20 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 			});
 
 		};
-		
+
 		function show_only_page() {
 			$("#editor").css("width", 0);
 			$("#iframe").css("left", 1);
-			$("#iframe").css("width", 1679);			
+			$("#iframe").css("width", 1679);
 		}
-		
+
 		function show_normal_view() {
 			$("#editor").css("width", 631);
 			$("#iframe").css("left", 632);
 			$("#iframe").css("width", 1047);
 			editor.resize();
 		}
-		
+
 		function setup_editor_for(file) {
 			if ('php' == get_file_extenstion(file).toLowerCase()) {
 				var mode = require("ace/mode/php").Mode;
@@ -221,23 +221,23 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 				editor.getSession().selection.on('changeCursor', abort_run);
 			});
 		}
-		
+
 		function get_file_extenstion(filename) {
 			return (/[.]/.exec(filename)) ? /[^.]+$/.exec(filename)[0] : undefined;
 		}
-		
+
 		var code_has_changed = false;
 		function code_changed() {
 			code_has_changed = true;
 		}
-		
+
 		var run_unintrusive_timer;
 		function run_unintrusive() {
 			console.log('run_unintrusive()');
 			clearTimeout(run_unintrusive_timer);
 			run_unintrusive_timer = setTimeout(run, run_delay);
 		}
-		
+
 		function run() {
 			code_has_changed = false;
 			console.log('run()');
@@ -251,7 +251,7 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 				}
 			});
 		}
-		
+
 		function refresh_page() {
 			var passedParams = '';
 			if (getUnknownUrlVarsAsString()) {
@@ -274,7 +274,7 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 				run_unintrusive_timer = setTimeout(run, run_delay);
 			}
 		}
-		
+
 		function update_output() {
 			$.get('output.log', function(data) {
 				$("#output").html(data);
@@ -285,9 +285,10 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 				}
 			});
 		}
-		
+
 		function update_errors() {
 			if (validator_url == 'none') return;
+			// FIXME This does not work (it ignores) render_url
 			validate_html5(project_url + '/' + file_to_edit, function(data) {
 				$("#errors-html").html(format_errors(data));
 				if (data.length) {
@@ -295,7 +296,7 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 				} else {
 					hide_errors_if_empty();
 				}
-			});		
+			});
 		}
 
 		function validate_html5(url, callback) {
@@ -325,17 +326,17 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 				error: function(error) { alert("Failed to validate html"); }
 			});
 		}
-						
+
 		// Makes goto line links in texts like 'File "test.py", line 156, in'
 		function format_errors(errors) {
 			errors = errors.replace(/line\s([0-9]+)/gi, "<a href=\"javascript:gotoLine($1);\">line $1</a>");
 			return errors;
 		}
-		
+
 		function gotoLine(line_number) {
 			editor.gotoLine(line_number);
 		}
-		
+
 		function show_output() {
 			$("#output").height('300px');
 			$("#output").width('630px');
@@ -344,14 +345,14 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 			$("#output").height('300px');
 			$("#output").width('5px');
 		}
-		
+
 		function show_errors() {
 			$("#errors").height('300px');
 		}
 		function hide_errors() {
 			$("#errors").height('1px');
 		}
-		
+
 		function hide_errors_if_empty() {
 			if ($(".errors").html().length == 0) {
 				hide_errors();
@@ -373,7 +374,7 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 						$("#updates-list").html(updates.map(function(update) {
 							return '<li><q>' + update.message + '</q> by ' + update.author + ' on ' + update.date + '</li>'
 						}).join(''));
-						
+
 						$("#updates.button").show();
 						$("#update_hide").text('Not now').show();
 					}
@@ -381,11 +382,11 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 				}
 			});
 		}
-		
+
 		function hide_update_screen() {
 			$("#updates").hide();
 		}
-		
+
 		function update_now() {
 			$.get('update_now.php', function(data) {
 				console.log('Update results:');
@@ -419,7 +420,7 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 			top: 0;
 			width: 1047px;
 			height: 100%;
-			
+
 			border: 0;
 		}
 		#output, #errors {
@@ -432,11 +433,11 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 			right: 0;
 			width: 5px;
 			height: 300px;
-			
+
 			background: #afa;
-			
+
 			overflow: auto;
-			
+
 			/* XXX Remove for now */
 			display: none;
 		}
@@ -446,9 +447,9 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 			left: 632px;
 			width: 648px;
 			height: 1px;
-			
+
 			overflow: auto;
-			
+
 			background: #ffa;
 			border-top: 1px solid #aaa;
 		}
@@ -461,7 +462,7 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 		#errors-html {
 			background: #ffa;
 		}
-		
+
 		#toggle-left, #toggle-right {
 			position: absolute;
 			top: 0;
@@ -475,7 +476,7 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 		#toggle-right {
 			right: 0;
 		}
-		
+
 		#updates {
 			display: none;
 			position: absolute;
@@ -486,7 +487,7 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 			padding: 0 1em 1em 1em;
 			font-family: Helvetica, Arial, Helvetica, sans-serif;
 			color: #242;
-			
+
 			background: #eef;
 			border-bottom: 1px solid #000;
 			box-shadow: 3px 0px 14px #000;
@@ -497,7 +498,7 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 		#updates-list q {
 			font-style: italic;
 		}
-		
+
 
 
 		.awesome, .awesome:visited {
@@ -517,7 +518,7 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 			padding: 5px 10px 6px;
 			position: relative;
 			text-decoration: none;
-			text-shadow: 0 -1px 1px rgba(0,0,0,0.25);	
+			text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
 		}
 		.awesome:hover {
 			background-color: #111;
@@ -575,13 +576,13 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 		.yellow.awesome:hover {
 			background-color: #fc9200;
 		}
-		
+
 		@-webkit-keyframes greenPulse {
 			from { background-color: #749a02; -webkit-box-shadow:: 0 0 9px #333; }
 			50% { background-color: #91bd09; -webkit-box-shadow:: 0 0 18px #91bd09; }
 			to { background-color: #749a02; -webkit-box-shadow:: 0 0 9px #333; }
 		}
-		
+
 		a.green {
 			-webkit-animation-name: greenPulse;
 			-webkit-animation-duration: 2s;
