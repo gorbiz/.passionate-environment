@@ -307,7 +307,7 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 				success: function(result) {
 					// FIXME Do propper error handling here!
 					if (result.messages[0].type == 'non-document-error') {
-						alert('Failed to validate, maybe you are using an external validator from localhost?');
+						console.log('ERROR: Failed to validate, maybe you are using an external validator from localhost?');
 						return;
 					}
 					callback(
