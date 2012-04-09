@@ -253,19 +253,26 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 		}
 
 		function refresh_page() {
-			var passedParams = '';
-			if (getUnknownUrlVarsAsString()) {
-				passedParams = '&' + getUnknownUrlVarsAsString();
-			}
-			if (render_url) {
-				// FIXME Serious issue we don't know if the URL has a query part or not, we simply assume so... This is something that will fail 50% of the time or so...
-				$("#iframe").attr('src', render_url + '&random=' + (new Date().getTime()) + passedParams);
-			} else {
-				$("#iframe").attr('src', '../' + file_to_edit + '?random=' + (new Date().getTime()) + passedParams);
-			}
-			//$("#iframe").contentWindow.location.reload();
-			//document.getElementById("iframe").contentDocument.location.href = 'src', '../' + file_to_edit;
-			//document.getElementById("iframe").contentDocument.location.reload(true);
+			$("#iframe").attr('src', get_url_to_render());
+		}
+
+		function get_url_to_render(absolute_url) {
+			var absolute_url = (typeof absolute_url == "undefined") ? false : absolute_url;
+                        var passedParams = '';
+                        if (getUnknownUrlVarsAsString()) {
+                                passedParams = '&' + getUnknownUrlVarsAsString();
+                        }
+                        if (render_url) {
+                                // FIXME Serious issue we don't know if the URL has a query part or not, we simply assume so... This is something that will fail 50% o$
+                                return render_url + '&random=' + (new Date().getTime()) + passedParams;
+                        } else {
+				if (absolute_url) {
+					var base_url = project_url + '/' + file_to_edit
+				} else {
+					var base_url = '../' + file_to_edit;
+				}
+				return base_url + '?random=' + (new Date().getTime()) + passedParams;
+                        }
 		}
 
 		function abort_run() {
@@ -289,7 +296,7 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 		function update_errors() {
 			if (validator_url == 'none') return;
 			// FIXME This does not work (it ignores) render_url
-			validate_html5(project_url + '/' + file_to_edit, function(data) {
+			validate_html5(get_url_to_render(true), function(data) {
 				$("#errors-html").html(format_errors(data));
 				if (data.length) {
 					show_errors();
