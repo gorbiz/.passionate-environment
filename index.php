@@ -134,6 +134,12 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 
 		var editor;
 		window.onload = function() {
+
+			// Prevent bullies such as Google Maps to steal the focus, forever.
+			$("#editor").click(function() {
+				window.focus();
+			});
+
 			editor = ace.edit("editor");
 			editor.setTheme("ace/theme/<?php echo $theme; ?>");
 
