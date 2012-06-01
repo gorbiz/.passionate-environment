@@ -180,12 +180,10 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 
 			// FIXME When going right, toggling browser fullscreen and then going left the editor is all white (resizing the window brings it's content back...)
 			$("#toggle-right").mouseover(function() {
-				console.log('RIGHT');
 				show_only_page();
 			});
 
 			$("#toggle-left").mouseover(function() {
-				console.log('LEFT');
 				show_normal_view();
 			});
 
@@ -239,14 +237,12 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 
 		var run_unintrusive_timer;
 		function run_unintrusive() {
-			console.log('run_unintrusive()');
 			clearTimeout(run_unintrusive_timer);
 			run_unintrusive_timer = setTimeout(run, run_delay);
 		}
 
 		function run() {
 			code_has_changed = false;
-			console.log('run()');
 			var data = editor.getSession().getValue();
 			$.post("put.php", { file: file_to_edit, data: data }, function(data) {
 				if (data.length) {
@@ -313,7 +309,6 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 		}
 
 		function validate_html5(url, callback) {
-			console.log('validate_html5()');
 			$.ajax({
 				url: validator_url,
 				data: { doc: url, out: 'json', nocache: new Date().getTime() },
