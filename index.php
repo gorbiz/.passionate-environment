@@ -70,7 +70,7 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 			var unknown = {};
 			var vars = getUrlVars();
 			for (key in vars) {
-				if (key != 'validator_url' && key != 'file' && key != 'fullscreen') {
+				if (key != 'validator_url' && key != 'file' && key != 'fullscreen' && key != 'theme' && key != 'render_url') {
 					unknown[key] = vars[key];
 				}
 			}
