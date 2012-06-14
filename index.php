@@ -331,7 +331,10 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 									+ "<strong>" + $("<div/>").text(message.extract).html() + "</strong><br />";
 						}).join('<br />'));
 				},
-				error: function(error) { alert("Failed to validate html"); }
+				error: function(error) {
+					// FIXME Do propper error handling here!
+					console.log('ERROR: Failed to validate, maybe you are using an external validator from localhost?');
+				}
 			});
 		}
 
