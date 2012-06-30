@@ -32,16 +32,16 @@
 		 * Example: &validator_url=http://localhost:8888
 		 */
 
-		function getUrlVars() {
+		function get_url_vars() {
 			var vars = {};
 			var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
 				vars[key] = value;
 			});
 			return vars;
 		}
-		function getUnknownUrlVarsAsString() {
+		function get_unknown_url_vars_as_string() {
 			var unknown = {};
-			var vars = getUrlVars();
+			var vars = get_url_vars();
 			for (key in vars) {
 				if (key != 'validator_url' && key != 'file' && key != 'fullscreen' && key != 'theme' && key != 'render_url') {
 					unknown[key] = vars[key];
@@ -55,8 +55,8 @@
 		}
 
 		var file_to_edit;
-		if (getURLParameter('file') != 'null') {
-			file_to_edit = getURLParameter('file');
+		if (get_url_parameter('file') != 'null') {
+			file_to_edit = get_url_parameter('file');
 		} else {
 			$.get('find_file.php', {nocache: new Date().getTime()}, function(data) {
 				file_to_edit = data;
@@ -71,20 +71,20 @@
 		 * front controlled systems like Drupal or WordPress.
 		 */
 		var render_url = null;
-		if (getURLParameter('render_url') != 'null') {
-			render_url = decodeURIComponent(getURLParameter('render_url'));
+		if (get_url_parameter('render_url') != 'null') {
+			render_url = decodeURIComponent(get_url_parameter('render_url'));
 		}
 
-		var show_only_page_on_load = (getURLParameter('fullscreen') != 'null');
+		var show_only_page_on_load = (get_url_parameter('fullscreen') != 'null');
 
 		var run_delay = 1000;
 
 		var project_url = get_project_url();
 
 		var validator_url = "http://validator.nu/";
-		if (getURLParameter('validator_url') != 'null') {
+		if (get_url_parameter('validator_url') != 'null') {
 			// TODO Maybe this could be stored in a cookie for convenience?
-			validator_url = getURLParameter('validator_url');
+			validator_url = get_url_parameter('validator_url');
 		}
 		/*
 		 * TODO else if on localhost/local network check if localhost:8888
@@ -97,7 +97,7 @@
 			return clear_url.substr(0, clear_url.lastIndexOf('/') + 1);
 		}
 
-		function getURLParameter(name) {
+		function get_url_parameter(name) {
 			return decodeURI(
 				(RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
 			);
@@ -120,7 +120,7 @@
 			"twilight",
 			"vibrant_ink"];		
 		var theme = "twilight";
-		var passed_theme = getURLParameter('theme');
+		var passed_theme = get_url_parameter('theme');
 		if (passed_theme != 'null') {
 			if (available_themes.indexOf(passed_theme) > -1) {
 				theme = passed_theme;
@@ -262,8 +262,8 @@
 		function get_url_to_render(absolute_url) {
 			var absolute_url = (typeof absolute_url == "undefined") ? false : absolute_url;
                         var passedParams = '';
-                        if (getUnknownUrlVarsAsString()) {
-                                passedParams = '&' + getUnknownUrlVarsAsString();
+                        if (get_unknown_url_vars_as_string()) {
+                                passedParams = '&' + get_unknown_url_vars_as_string();
                         }
                         if (render_url) {
                                 // FIXME Serious issue we don't know if the URL has a query part or not, we simply assume so... This is something that will fail 50% o$
@@ -341,11 +341,11 @@
 
 		// Makes goto line links in texts like 'File "test.py", line 156, in'
 		function format_errors(errors) {
-			errors = errors.replace(/line\s([0-9]+)/gi, "<a href=\"javascript:gotoLine($1);\">line $1</a>");
+			errors = errors.replace(/line\s([0-9]+)/gi, "<a href=\"javascript:goto_line($1);\">line $1</a>");
 			return errors;
 		}
 
-		function gotoLine(line_number) {
+		function goto_line(line_number) {
 			editor.gotoLine(line_number);
 		}
 
