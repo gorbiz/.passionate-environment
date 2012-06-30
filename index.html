@@ -163,13 +163,6 @@
 				hide_errors();
 			});
 
-			$("#output").mouseover(function() {
-				show_output();
-			});
-			$("#output").mouseout(function() {
-				hide_output();
-			});
-
 			$("iframe#iframe").load(function() {
 				update_errors();
 			});
@@ -284,17 +277,6 @@
 			}
 		}
 
-		function update_output() {
-			$.get('output.log', function(data) {
-				$("#output").html(data);
-				if (data.length) {
-					//show_output();
-				} else {
-					hide_output();
-				}
-			});
-		}
-
 		function update_errors() {
 			if (validator_url == 'none') return;
 			// FIXME This does not work (it ignores) render_url
@@ -348,15 +330,6 @@
 			editor.gotoLine(line_number);
 		}
 
-		function show_output() {
-			$("#output").height('300px');
-			$("#output").width('630px');
-		}
-		function hide_output() {
-			$("#output").height('300px');
-			$("#output").width('5px');
-		}
-
 		function show_errors() {
 			$("#errors").height('300px');
 		}
@@ -395,23 +368,9 @@
 
 			border: 0;
 		}
-		#output, #errors {
+		#errors {
 			z-index: 1001;
 			font-family: Helvetica, Arial, sans-serif;
-		}
-		#output {
-			position: absolute;
-			top: 0;
-			right: 0;
-			width: 5px;
-			height: 300px;
-
-			background: #afa;
-
-			overflow: auto;
-
-			/* XXX Remove for now */
-			display: none;
 		}
 		#errors {
 			position: absolute;
@@ -451,9 +410,7 @@
 	</style>
 </head>
 
-<body>
-	<pre id="output"></pre>
-	
+<body>	
 	<iframe id="iframe"></iframe>
 	
 	<div id="errors">
