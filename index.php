@@ -3,32 +3,6 @@
 <head>
 	<title>.passionate-environment</title>
 
-<?php
-
-$available_themes = array(
-	"clouds",
-	"clouds_midnight",
-	"cobalt",
-	"crimson_editor",
-	"dawn",
-	"eclipse",
-	"idle_fingers",
-	"kr_theme",
-	"merbivore",
-	"merbivore_soft",
-	"mono_industrial",
-	"monokai",
-	"pastel_on_dark",
-	"twilight",
-	"vibrant_ink");
-
-$theme = "twilight";
-if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
-	$theme = $_GET['theme'];
-}
-
-?>
-
 	<script src="http://www.passionismandatory.com/libs/ace/ace-uncompressed.js" type="text/javascript" charset="utf-8"></script>
 	<script src="http://www.passionismandatory.com/libs/ace/mode-html.js" type="text/javascript" charset="utf-8"></script>
 	<script src="http://www.passionismandatory.com/libs/ace/mode-php.js" type="text/javascript" charset="utf-8"></script>
@@ -130,6 +104,32 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 			);
 		}
 
+		var available_themes = [
+			"clouds",
+			"clouds_midnight",
+			"cobalt",
+			"crimson_editor",
+			"dawn",
+			"eclipse",
+			"idle_fingers",
+			"kr_theme",
+			"merbivore",
+			"merbivore_soft",
+			"mono_industrial",
+			"monokai",
+			"pastel_on_dark",
+			"twilight",
+			"vibrant_ink"];		
+		var theme = "twilight";
+		var passed_theme = getURLParameter('theme');
+		if (passed_theme != 'null') {
+			if (available_themes.indexOf(passed_theme) > -1) {
+				theme = passed_theme;
+			} else {
+				console.warn('Warning: Unknown theme provided "' + passed_theme + '"');
+			}
+		}
+
 
 
 		var editor;
@@ -140,8 +140,8 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 			});
 
 			editor = ace.edit("editor");
-			$.getScript("http://www.passionismandatory.com/libs/ace/theme-<?php echo $theme; ?>.js", function() {
-				editor.setTheme("ace/theme/<?php echo $theme; ?>");
+			$.getScript("http://www.passionismandatory.com/libs/ace/theme-" + theme + ".js", function() {
+				editor.setTheme("ace/theme/" + theme);
 			});
 
 			editor.setShowPrintMargin(false);
