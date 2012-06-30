@@ -160,8 +160,6 @@
 				show_only_page();
 			}
 
-			check_for_updates();
-
 
 
 			$("#errors").mouseover(function() {
@@ -373,45 +371,6 @@
 				hide_errors();
 			}
 		}
-
-
-		// This is some crazy attempt to allow users to update the editor from
-		// inside the editor using (git pull) if there are updates...
-		function check_for_updates() {
-			$("#updates_refresh").hide();
-			$.getJSON('check_for_updates.php', function(updates) {
-				if (updates.length > 0) {
-					if (updates[0].warning != undefined) {
-						$("#updates-warning").html(updates[0].warning);
-						$("#update_now").hide();
-						$("#update_hide").text('OK, go away').show();
-					} else {
-						$("#updates-list").html(updates.map(function(update) {
-							return '<li><q>' + update.message + '</q> by ' + update.author + ' on ' + update.date + '</li>'
-						}).join(''));
-
-						$("#updates.button").show();
-						$("#update_hide").text('Not now').show();
-					}
-					$("#updates").show();
-				}
-			});
-		}
-
-		function hide_update_screen() {
-			$("#updates").hide();
-		}
-
-		function update_now() {
-			$.get('update_now.php', function(data) {
-				console.log('Update results:');
-				console.log(data);
-				console.log('Document should now be reloaded...');
-				$("#updates-results").html(data);
-				$("#updates_refresh").show();
-			});
-		}
-
 	</script>
 
 	<style type="text/css">
@@ -491,147 +450,22 @@
 		#toggle-right {
 			right: 0;
 		}
-
-		#updates {
-			display: none;
-			position: absolute;
-			left: 0;
-			top: 0;
-			z-index: 100000;
-			width: 100%;
-			padding: 0 1em 1em 1em;
-			font-family: Helvetica, Arial, Helvetica, sans-serif;
-			color: #242;
-
-			background: #eef;
-			border-bottom: 1px solid #000;
-			box-shadow: 3px 0px 14px #000;
-		}
-		#updates h2 {
-			font-size: 1.25em;
-		}
-		#updates-list q {
-			font-style: italic;
-		}
-
-
-
-		.awesome, .awesome:visited {
-			background: #222 url(http://zurb.com/images/alert-overlay.png) repeat-x;
-			border: 0px;
-			border-bottom: 1px solid rgba(0,0,0,0.25);
-			color: #fff;
-			cursor: pointer;
-			display: inline-block;
-			font-family: 'Helvetica Neue', Arial, Helvetica, Verdana, sans-serif;
-			-webkit-border-radius: 5px;
-			-moz-border-radius: 5px;
-			border-radius:5px;
-			-webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
-			-moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
-			box-shadow: 0 1px 3px rgba(0,0,0,0.5);
-			padding: 5px 10px 6px;
-			position: relative;
-			text-decoration: none;
-			text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
-		}
-		.awesome:hover {
-			background-color: #111;
-			color: #fff;
-		}
-		.awesome:active {
-			top: 1px;
-		}
-		.small.awesome, .small.awesome:visited {
-			font-size: 11px;
-		}
-		.awesome, .awesome:visited, .medium.awesome, .medium.awesome:visited {
-			font-size: 13px;
-			font-weight: bold;
-			line-height: 1;
-			text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
-		}
-		.large.awesome, .large.awesome:visited {
-			font-size: 14px;
-			padding: 8px 14px 9px;
-		}
-		.green.awesome, .green.awesome:visited {
-			background-color: #91bd09;
-		}
-		.green.awesome:hover {
-			background-color: #749a02;
-		}
-		.blue.awesome, .blue.awesome:visited {
-			background-color: #2daebf;
-		}
-		.blue.awesome:hover {
-			background-color: #007d9a;
-		}
-		.red.awesome, .red.awesome:visited {
-			background-color: #e33100;
-		}
-		.red.awesome:hover {
-			background-color: #872300;
-		}
-		.magenta.awesome, .magenta.awesome:visited {
-			background-color: #a9014b;
-		}
-		.magenta.awesome:hover {
-			background-color: #630030;
-		}
-		.orange.awesome, .orange.awesome:visited {
-			background-color: #ff5c00;
-		}
-		.orange.awesome:hover {
-			background-color: #d45500;
-		}
-		.yellow.awesome, .yellow.awesome:visited {
-			background-color: #ffb515;
-		}
-		.yellow.awesome:hover {
-			background-color: #fc9200;
-		}
-
-		@-webkit-keyframes greenPulse {
-			from { background-color: #749a02; -webkit-box-shadow:: 0 0 9px #333; }
-			50% { background-color: #91bd09; -webkit-box-shadow:: 0 0 18px #91bd09; }
-			to { background-color: #749a02; -webkit-box-shadow:: 0 0 9px #333; }
-		}
-
-		a.green {
-			-webkit-animation-name: greenPulse;
-			-webkit-animation-duration: 2s;
-			-webkit-animation-iteration-count: infinite;
-		}
-
 	</style>
 </head>
 
 <body>
-
-<div id="updates">
-	<h2>There are new updated to the editor available!</h2>
-	<p id="updates-warning"></p>
-	<ul id="updates-list"></ul>
-	<a href="javascript:update_now();" id="update_now" class="awesome large green button">Update!</a>
-	<a href="javascript:hide_update_screen();" id="update_hide" class="awesome large blue button">Not now</a>
-	<pre id="updates-results"></pre>
-	<a href="javascript:window.location.reload();" id="updates_refresh" class="awesome large green button">Reload page to see changes</a>
-</div>
-
-<pre id="output"></pre>
-
-<iframe id="iframe"></iframe>
-
-<div id="errors">
-	<div id="errors-code" class="errors"></div>
-	<div id="errors-html" class="errors"></div>
-</div>
-
-<div id="editor">code goes here</div>
-
-<div id="toggle-left"></div>
-<div id="toggle-right"></div>
-
+	<pre id="output"></pre>
+	
+	<iframe id="iframe"></iframe>
+	
+	<div id="errors">
+		<div id="errors-code" class="errors"></div>
+		<div id="errors-html" class="errors"></div>
+	</div>
+	
+	<div id="editor">code goes here</div>
+	
+	<div id="toggle-left"></div>
+	<div id="toggle-right"></div>	
 </body>
 </html>
