@@ -7,7 +7,6 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
 
 	<script type="text/javascript">
-
 		/**
 		 * Some options,
 		 * all are to be passed via the URL.
@@ -26,6 +25,11 @@
 		 * &validator_url=<url to validator>
 		 * Example: &validator_url=http://localhost:8888
 		 */
+		 
+		var config = {
+			run_delay: 1000,
+			validator_url: "http://validator.nu/"
+		};
 
 		function get_url_vars() {
 			var vars = {};
@@ -72,14 +76,10 @@
 
 		var show_only_page_on_load = (get_url_parameter('fullscreen') != 'null');
 
-		var run_delay = 1000;
-
 		var project_url = get_project_url();
 
-		var validator_url = "http://validator.nu/";
 		if (get_url_parameter('validator_url') != 'null') {
-			// TODO Maybe this could be stored in a cookie for convenience?
-			validator_url = get_url_parameter('validator_url');
+			config.validator_url = get_url_parameter('validator_url');
 		}
 		/*
 		 * TODO else if on localhost/local network check if localhost:8888
@@ -175,7 +175,12 @@
 			$("#toggle-left").mouseover(function() {
 				show_normal_view();
 			});
-
+			
+			// TODO Improved sizing of editor versus product window:
+			// - After toggling to or from fullscreen all this is gone back to bad.
+			// - The togglers or the error box still seems to make scroll bars at times
+			// - When you resize the window these sizes remain...
+			// - A split right in the middle is probably not what you want...
 		});
 
 		function show_only_page() {
@@ -231,7 +236,7 @@
 		var run_unintrusive_timer;
 		function run_unintrusive() {
 			clearTimeout(run_unintrusive_timer);
-			run_unintrusive_timer = setTimeout(run, run_delay);
+			run_unintrusive_timer = setTimeout(run, config.run_delay);
 		}
 
 		function run() {
@@ -273,12 +278,12 @@
 		function abort_run() {
 			clearTimeout(run_unintrusive_timer);
 			if (code_has_changed) {
-				run_unintrusive_timer = setTimeout(run, run_delay);
+				run_unintrusive_timer = setTimeout(run, config.run_delay);
 			}
 		}
 
 		function update_errors() {
-			if (validator_url == 'none') return;
+			if (config.validator_url == 'none') return;
 			// FIXME This does not work (it ignores) render_url
 			validate_html5(get_url_to_render(true), function(data) {
 				$("#errors-html").html(format_errors(data));
@@ -292,7 +297,7 @@
 
 		function validate_html5(url, callback) {
 			$.ajax({
-				url: validator_url,
+				url: config.validator_url,
 				data: { doc: url, out: 'json', nocache: new Date().getTime() },
 				success: function(result) {
 					// FIXME Do propper error handling here!
