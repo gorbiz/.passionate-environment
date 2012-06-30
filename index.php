@@ -34,7 +34,6 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 	<script src="http://www.passionismandatory.com/libs/ace/mode-php.js" type="text/javascript" charset="utf-8"></script>
 	<script src="http://www.passionismandatory.com/libs/ace/mode-css.js" type="text/javascript" charset="utf-8"></script>
 	<script src="http://www.passionismandatory.com/libs/ace/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
-	<script src="http://www.passionismandatory.com/libs/ace/theme-<?php echo $theme; ?>.js" type="text/javascript" charset="utf-8"></script>
 
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js" type="text/javascript"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js" type="text/javascript"></script>
@@ -134,15 +133,16 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 
 
 		var editor;
-		window.onload = function() {
-
+		$(document).ready(function() {
 			// Prevent bullies such as Google Maps to steal the focus, forever.
 			$("#editor").click(function() {
 				window.focus();
 			});
 
 			editor = ace.edit("editor");
-			editor.setTheme("ace/theme/<?php echo $theme; ?>");
+			$.getScript("http://www.passionismandatory.com/libs/ace/theme-<?php echo $theme; ?>.js", function() {
+				editor.setTheme("ace/theme/<?php echo $theme; ?>");
+			});
 
 			editor.setShowPrintMargin(false);
 
@@ -188,7 +188,7 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 				show_normal_view();
 			});
 
-		};
+		});
 
 		function show_only_page() {
 			$("#editor").css("width", 0);
