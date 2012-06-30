@@ -146,6 +146,9 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], $available_themes)) {
 
 			editor.setShowPrintMargin(false);
 
+			// The outputed file will use real tabs
+			editor.getSession().setUseSoftTabs(false);
+
 			// Without this, hitting the home button doesn't scroll all the way 
 			editor.renderer.setPadding(0);
 
