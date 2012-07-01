@@ -41,10 +41,10 @@
 
 		var project_url = get_project_url();
 
-
+		var config_url = {};
 		for (var property in config) {
 			if (get_url_parameter(property) != 'null') {
-				config[property] = get_url_parameter(property);
+				config[property] = config_url[property] = get_url_parameter(property);
 			}
 		}
 
@@ -298,8 +298,15 @@
 			}
 		}
 		
-		
-		
+
+
+		function is_config_property(key) {
+			for (var property in config_url) {
+				if (key == property) return true;
+			}
+			return false;
+		}
+
 		function get_project_url() {
 			var clear_url = window.location.href.split('?')[0].slice(0, -1);
 			return clear_url.substr(0, clear_url.lastIndexOf('/') + 1);
@@ -316,7 +323,7 @@
 			var unknown = {};
 			var vars = get_url_vars();
 			for (key in vars) {
-				if (key != 'validator_url' && key != 'file' && key != 'fullscreen' && key != 'theme' && key != 'render_url') {
+				if (!is_config_property(key)) {
 					unknown[key] = vars[key];
 				}
 			}
