@@ -68,7 +68,7 @@
 					finalize_config();
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
-					if (errorThrown != 'Not Found') {
+					if (errorThrown != 'Not Found' && errorThrown != 'Forbidden') {
 						alert('Something wrong with the config file: ' + textStatus + ' - ' + errorThrown);
 					}
 					finalize_config();
