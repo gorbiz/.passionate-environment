@@ -28,7 +28,8 @@
 			fullscreen: false,
 			font_size: '12px',
 			tab_size: 4,
-			use_soft_tabs: false
+			use_soft_tabs: false,
+			config_file: '.passionate-environment-config.json'
 		};
 
 		var available_themes = [
@@ -57,11 +58,10 @@
 			});
 
 			$.ajax({
-				url: '../.passionate-environment-config.json',
+				url: '../' + config.config_file,
 				dataType: 'json',
 				cache: false,
 				success: function(config_file) {
-					console.log(config_file);
 					for (var property in config_file) {
 						config[property] = config_file[property];
 					}
