@@ -8,33 +8,27 @@
 
 	<script type="text/javascript">
 		/**
-		 * Some options,
-		 * all are to be passed via the URL.
-		 *
-		 * Edit a specific file:
-		 * &file=<filename>
-		 *
-		 * Hide the editor on load (fullscreen mode):
-		 * &fullscreen=yes
-		 * Exit fullscreen mode by mousing over left edge of the screen.
-		 *
-		 * Turn off the html valiator:
-		 * &validator_url=none
-		 *
-		 * Specify a html validator to use (compatible with validator.nu):
-		 * &validator_url=<url to validator>
-		 * Example: &validator_url=http://localhost:8888
+		 * Configurations can be passed via URL like: &file=<filename>
+		 * Or in a file called .passionate-environment-config.json, example:
+		 * {
+		 *   tab_size: 2,
+		 *   use_soft_tabs: true
+		 * }
 		 */
-		 
-		var config = {
+		var config = default_config = {
 			run_delay: 1000,
+			// HTML validator to use, compatible with validator.nu. "none" is valid
 			validator_url: "http://validator.nu/",
 			// Filename of file to edit
 			file: null,
 			// Instead of rendering the file you are editing, render an other URL
 			render_url: null,
-			show_only_page_on_load: false,
-			theme: "twilight"
+			theme: "twilight",
+			// Show only page / product on load
+			fullscreen: false,
+			font_size: '12px',
+			tab_size: 4,
+			use_soft_tabs: false
 		};
 
 		var available_themes = [
@@ -44,33 +38,12 @@
 			"merbivore_soft",	"mono_industrial",	"monokai",
 			"pastel_on_dark",	"twilight",			"vibrant_ink"];		
 
-
-		if (get_url_parameter('file') != 'null') {
-			config.file = get_url_parameter('file');
-		} else {
-			$.get('find_file.php', {nocache: new Date().getTime()}, function(data) {
-				config.file = data;
-				setup_editor_for(config.file);
-			});
-		}
-
-		if (get_url_parameter('render_url') != 'null') {
-			config.render_url = decodeURIComponent(get_url_parameter('render_url'));
-		}
-
-		config.show_only_page_on_load = (get_url_parameter('fullscreen') != 'null');
-
 		var project_url = get_project_url();
-		if (get_url_parameter('validator_url') != 'null') {
-			config.validator_url = get_url_parameter('validator_url');
-		}
 
-		var passed_theme = get_url_parameter('theme');
-		if (passed_theme != 'null') {
-			if (available_themes.indexOf(passed_theme) > -1) {
-				config.theme = passed_theme;
-			} else {
-				console.warn('Warning: Unknown theme provided "' + passed_theme + '"');
+
+		for (var property in config) {
+			if (get_url_parameter(property) != 'null') {
+				config[property] = get_url_parameter(property);
 			}
 		}
 
@@ -83,28 +56,55 @@
 				window.focus();
 			});
 
-			editor = ace.edit("editor");
-			$.getScript("http://www.passionismandatory.com/libs/ace/theme-" + config.theme + ".js", function() {
-				editor.setTheme("ace/theme/" + config.theme);
+			$.ajax({
+				url: '../.passionate-environment-config.json',
+				dataType: 'json',
+				cache: false,
+				success: function(config_file) {
+					console.log(config_file);
+					for (var property in config_file) {
+						config[property] = config_file[property];
+					}
+					finalize_config();
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					if (errorThrown != 'Not Found') {
+						alert('Something wrong with the config file: ' + textStatus + ' - ' + errorThrown);
+					}
+					finalize_config();
+				}
 			});
 
-			editor.setShowPrintMargin(false);
+			function finalize_config() {
+				if (!config.file) {
+					$.get('find_file.php', {nocache: new Date().getTime()}, function(data) {
+						config.file = data;
+						setup_editor_for(config.file);
+					});
+				}
+				if (available_themes.indexOf(config.theme) == -1) {
+					console.warn('Warning: Unknown theme provided "' + config.theme + '"');
+					config.theme = default_config.theme;
+				}
 
-			// The outputed file will use real tabs
-			editor.getSession().setUseSoftTabs(false);
-
-			// Without this, hitting the home button doesn't scroll all the way 
-			editor.renderer.setPadding(0);
-
-			if (config.file) {
-				setup_editor_for(config.file);
+				editor = ace.edit("editor");
+				$.getScript("http://www.passionismandatory.com/libs/ace/theme-" + config.theme + ".js", function() {
+					editor.setTheme("ace/theme/" + config.theme);
+				});
+				editor.setShowPrintMargin(false);
+				editor.getSession().setUseSoftTabs(config.use_soft_tabs);
+				editor.getSession().setTabSize(config.tab_size);
+				// Without this, hitting the home button doesn't scroll all the way 
+				editor.renderer.setPadding(0);
+				document.getElementById('editor').style.fontSize = config.font_size;
+				document.getElementById('editor').style.fontFamily = '"Ubuntu Mono", monospace';
+				if (config.file) {
+					setup_editor_for(config.file);
+				}
+				if (config.fullscreen) {
+					show_only_page();
+				}
 			}
-
-			if (config.show_only_page_on_load) {
-				show_only_page();
-			}
-
-
 
 			$("#errors").mouseover(function() {
 				show_errors();
@@ -166,8 +166,8 @@
 		function get_mode_for_extension(extension, callback) {
 			extension = extension.toLowerCase();
 			var mode_name = 'html';
-			if (['html', 'js', 'css', 'php'].indexOf(extension) > -1) {
-				mode_name = (extension == 'js') ? 'javascript' : extension;
+			if (['html', 'js', 'json', 'css', 'php'].indexOf(extension) > -1) {
+				mode_name = (extension == 'js' || extension == 'json') ? 'javascript' : extension;
 			}
 			$.getScript("http://www.passionismandatory.com/libs/ace/mode-" + mode_name + ".js", function() {
 				callback(require("ace/mode/" + mode_name).Mode);
