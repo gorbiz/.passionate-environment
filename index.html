@@ -166,8 +166,8 @@
 		function get_mode_for_extension(extension, callback) {
 			extension = extension.toLowerCase();
 			var mode_name = 'html';
-			if (['html', 'js', 'json', 'css', 'php'].indexOf(extension) > -1) {
-				mode_name = (extension == 'js' || extension == 'json') ? 'javascript' : extension;
+			if (['html', 'js', 'json', 'css', 'coffee', 'php'].indexOf(extension) > -1) {
+				mode_name = (extension == 'js') ? 'javascript' : extension;
 			}
 			$.getScript("http://www.passionismandatory.com/libs/ace/mode-" + mode_name + ".js", function() {
 				callback(require("ace/mode/" + mode_name).Mode);
