@@ -3,7 +3,7 @@
 <head>
 	<title>.passionate-environment</title>
 
-	<script src="http://www.passionismandatory.com/libs/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+	<script src="ace/ace.js" type="text/javascript" charset="utf-8"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
 
 	<script type="text/javascript">
@@ -88,7 +88,7 @@
 				}
 
 				editor = ace.edit("editor");
-				$.getScript("http://www.passionismandatory.com/libs/ace/theme-" + config.theme + ".js", function() {
+				$.getScript("ace/theme-" + config.theme + ".js", function() {
 					editor.setTheme("ace/theme/" + config.theme);
 				});
 				editor.setShowPrintMargin(false);
@@ -169,7 +169,7 @@
 			if (['html', 'js', 'json', 'css', 'coffee', 'php'].indexOf(extension) > -1) {
 				mode_name = (extension == 'js') ? 'javascript' : extension;
 			}
-			$.getScript("http://www.passionismandatory.com/libs/ace/mode-" + mode_name + ".js", function() {
+			$.getScript("ace/mode-" + mode_name + ".js", function() {
 				callback(require("ace/mode/" + mode_name).Mode);
 			});			
 		}
