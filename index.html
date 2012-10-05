@@ -29,7 +29,7 @@
 			font_size: '12px',
 			tab_size: 4,
 			use_soft_tabs: false,
-			config_file: '.passionate-environment-config.json'
+			config_file: 'passionate-environment-config.json'
 		};
 
 		var available_themes = [
@@ -69,7 +69,7 @@
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
 					if (errorThrown != 'Not Found' && errorThrown != 'Forbidden') {
-						alert('Something wrong with the config file: ' + textStatus + ' - ' + errorThrown);
+						console.log('Something wrong with the config file: ' + textStatus + ' - ' + errorThrown);
 					}
 					finalize_config();
 				}

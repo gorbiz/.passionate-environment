@@ -11,7 +11,7 @@ app.locals.pretty = true;
 app.use(express.errorHandler());
 app.use(express.logger('dev'));
 
-app.get('/', function(req, res) {
+app.get('/edit', function(req, res) {
   fs.readFile('index.html', 'utf8', function (err, data) {
     if (err) throw err;
     res.set('Content-Type', 'text/html');
@@ -32,7 +32,6 @@ app.get('/get', function(req, res) {
 app.post('/put', function(req, res) {
   fs.writeFile('../' + req.body.file, req.body.data, 'utf8', function(err) {
     if (err) throw err;
-    console.log(req.body.file, req.body.data);
     res.send('');
   });
 });
@@ -45,10 +44,12 @@ app.get('/find-file', function(req, res) {
 });
 
 app.all('*', function(req, res) {
-  var file = '../' + req.route.params;
-  fs.exists(file, function(exists) {
+  var file = req.route.params.toString();
+  fs.exists('..' + file, function(exists) {
     if (!exists) return res.send(404, 'Page not found.');
-    res.sendfile(file);
+    res.sendfile(file, { root: '..' }, function(err) {
+      if (err) throw err;
+    });
   });
 });
 
