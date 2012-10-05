@@ -37,7 +37,7 @@
 			"crimson_editor",	"dawn",				"eclipse",
 			"idle_fingers",		"kr_theme",			"merbivore",
 			"merbivore_soft",	"mono_industrial",	"monokai",
-			"pastel_on_dark",	"twilight",			"vibrant_ink"];		
+			"pastel_on_dark",	"twilight",			"vibrant_ink"];
 
 		var project_url = get_project_url();
 
@@ -77,7 +77,7 @@
 
 			function finalize_config() {
 				if (!config.file) {
-					$.get('find_file.php', {nocache: new Date().getTime()}, function(data) {
+					$.get('find-file', { nocache: new Date().getTime() }, function(data) {
 						config.file = data;
 						setup_editor_for(config.file);
 					});
@@ -94,7 +94,7 @@
 				editor.setShowPrintMargin(false);
 				editor.getSession().setUseSoftTabs(config.use_soft_tabs);
 				editor.getSession().setTabSize(config.tab_size);
-				// Without this, hitting the home button doesn't scroll all the way 
+				// Without this, hitting the home button doesn't scroll all the way
 				editor.renderer.setPadding(0);
 				document.getElementById('editor').style.fontSize = config.font_size;
 				document.getElementById('editor').style.fontFamily = '"Ubuntu Mono", monospace';
@@ -125,7 +125,7 @@
 			$("#toggle-left").mouseover(function() {
 				show_normal_view();
 			});
-			
+
 			// TODO Improved sizing of editor versus product window:
 			// - After toggling to or from fullscreen all this is gone back to bad.
 			// - The togglers or the error box still seems to make scroll bars at times
@@ -150,9 +150,9 @@
 			get_mode_for_extension(get_file_extenstion(file), function(mode) {
 				editor.getSession().setMode(new mode());
 			});
-			
+
 			refresh_page();
-			$.get('get.php', {file: file, nocache: new Date().getTime()}, function(data) {
+			$.get('get', { file: file, nocache: new Date().getTime() }, function(data) {
 				editor.getSession().setValue(data);
 				// XXX I put this in here so that the editor will not save the file just after loading it...
 				editor.getSession().on('change', function() {
@@ -162,7 +162,7 @@
 				editor.getSession().selection.on('changeCursor', abort_run);
 			});
 		}
-		
+
 		function get_mode_for_extension(extension, callback) {
 			extension = extension.toLowerCase();
 			var mode_name = 'html';
@@ -171,7 +171,7 @@
 			}
 			$.getScript("ace/mode-" + mode_name + ".js", function() {
 				callback(require("ace/mode/" + mode_name).Mode);
-			});			
+			});
 		}
 
 		function get_file_extenstion(filename) {
@@ -192,7 +192,7 @@
 		function run() {
 			code_has_changed = false;
 			var data = editor.getSession().getValue();
-			$.post("put.php", { file: config.file, data: data }, function(data) {
+			$.post("put", { file: config.file, data: data }, function(data) {
 				if (data.length) {
 					alert("Got an unexpected response: " + data);
 					return false;
@@ -262,7 +262,7 @@
 						.filter(function(message) { return !/Attribute .?property.? not allowed on element .?meta.?/.test(message.message); })
 						.filter(function(message) { return !/Element .?meta.? is missing one or more of the following attributes/.test(message.message); })
 						.map(function(message) {
-								return "<strong>" + message.type.charAt(0).toUpperCase() + message.type.substr(1) + ":</strong>" + message.message + "<br />" 
+								return "<strong>" + message.type.charAt(0).toUpperCase() + message.type.substr(1) + ":</strong>" + message.message + "<br />"
 									+ "From line " + message.firstLine + ", column" + message.firstColumn + "; to line " + message.lastLine + ", column " + message.lastColumn + "<br />"
 									// Lazy man's encode html entities
 									+ "<strong>" + $("<div/>").text(message.extract).html() + "</strong><br />";
@@ -297,7 +297,7 @@
 				hide_errors();
 			}
 		}
-		
+
 
 
 		function is_config_property(key) {
@@ -311,7 +311,7 @@
 			var clear_url = window.location.href.split('?')[0].slice(0, -1);
 			return clear_url.substr(0, clear_url.lastIndexOf('/') + 1);
 		}
-		
+
 		function get_url_vars() {
 			var vars = {};
 			var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
@@ -333,7 +333,7 @@
 			}
 			return tmp.join('&');
 		}
-		
+
 		function get_url_parameter(name) {
 			return decodeURI(
 				(RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
@@ -408,17 +408,17 @@
 	</style>
 </head>
 
-<body>	
+<body>
 	<iframe id="iframe"></iframe>
-	
+
 	<div id="errors">
 		<div id="errors-code" class="errors"></div>
 		<div id="errors-html" class="errors"></div>
 	</div>
-	
+
 	<div id="editor">code goes here</div>
-	
+
 	<div id="toggle-left"></div>
-	<div id="toggle-right"></div>	
+	<div id="toggle-right"></div>
 </body>
 </html>
