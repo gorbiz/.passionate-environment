@@ -36,7 +36,6 @@ app.post('/put', function(req, res) {
   });
 });
 
-
 app.get('/find-file', function(req, res) {
   fs.exists('../index.html', function(exists) {
     res.send(exists ? 'index.html' : '');
